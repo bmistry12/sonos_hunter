@@ -271,13 +271,18 @@ class SonoHunter:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('-i', '--interface', help='interface to use for scanning')
     parser.add_argument('-t','--target', help='ip to connect to (skip scan phase)')
     parser.add_argument('-f', '--file', help='file to play on device')
+
 
     if os.geteuid() != 0:
         exit("Needs to be run as root to do low level networking stuff")
 
     args = parser.parse_args()
+
+    if args.interface is not None and args.interface not in netifaces.interfaces():
+        exit("Specified interface {} not found".format(args.interface))
 
     sono_hunter = SonoHunter()
 
